@@ -1,0 +1,11 @@
+global:
+  scrape_interval:     10s
+
+  external_labels:
+    monitor: 'gopher-monitoring'
+
+scrape_configs:
+  - job_name: 'gopher-app'
+
+    static_configs:
+            - targets: ['gopher-app:8000']

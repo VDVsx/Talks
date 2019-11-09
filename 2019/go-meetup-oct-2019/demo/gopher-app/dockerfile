@@ -1,0 +1,17 @@
+FROM golang:1.13.0-alpine3.10
+
+RUN apk --no-cache add curl  
+
+RUN mkdir /app
+RUN mkdir /app/gophers
+
+COPY . /app
+WORKDIR /app
+
+# Build the executable to `/app`. Mark the build as statically linked.
+RUN CGO_ENABLED=0 go build \
+    -installsuffix 'static' \
+    -o main .
+    
+EXPOSE 8000
+CMD ["/app/main"]

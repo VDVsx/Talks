@@ -1,0 +1,34 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/api/prom/push
+
+# static discovery in k8s can be done automatically
+scrape_configs:
+- job_name: system
+  entry_parser: raw
+  static_configs:
+  - targets:
+      - localhost
+    labels:
+      job: varlogs
+      __path__: /var/log/*log
+
+- job_name: gopher-app
+  pipeline_stages:
+  - docker:
+  static_configs:
+  - targets:
+    - localhost
+    labels:
+      job: gopher-app
+      # This is a hack for MAC OS due to the fact pipelines were not supported
+      # in the docker plugin with recompilation at the time of this demo.
+      # This setup in none kubernetes works better ith fluentd/fluentbit or the loki
+      # docker plugin once is mature
+      __path__: /var/lib/docker/containers/*/*json.log 

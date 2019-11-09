@@ -1,0 +1,53 @@
+version: "3"
+
+volumes:
+    prometheus_data:
+    grafana_data:
+    loki_data:
+
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    logging:
+      driver: local
+    volumes:
+      - ./prometheus:/etc/prometheus:Z # Map the dir to load the local config
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana:latest
+    logging:
+      driver: local
+    volumes:
+      - grafana_data:/var/lib/grafana
+    ports:
+      - "3000:3000"
+
+  loki:
+    image: grafana/loki:v0.4.0
+    logging:
+      driver: local
+    volumes:
+      - ./loki:/etc/loki:Z # Map the dir to load the local config
+      - loki_data:/tmp
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+
+  promtail:
+    image: grafana/promtail:latest
+    logging:
+      driver: local
+    volumes:
+      - ./promtail:/etc/promtail:Z # Map the dir to load the local config
+      - /var/log:/var/log
+      - /var/lib/docker/containers:/var/lib/docker/containers
+    command: -config.file=/etc/promtail/docker-config.yaml
+
+  gopher-app:
+    build: gopher-app
+    ports:
+      - "8000:8000"
+    
