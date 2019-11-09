@@ -20,3 +20,5 @@ Demo used in the Helsinki Gophers October meetup, the demo app and other code fi
 * Show the metrics of the instrumented endpoints and the Go runtime in Grafana, same is also available in Prometheus UI at `http://localhost:9090/`
 
 In the demo I used a browser extension to slow refresh the tab and a load testing tool written in Go called [Hey](https://github.com/rakyll/hey).
+
+Gophers used are from [Free Gopher Pack by Maria Letta](https://github.com/MariaLetta/free-gophers-pack).
